@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
+import { Game } from 'src/models/game';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 
 @Component({
@@ -15,7 +15,7 @@ export class GameComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
 
-  
+
   ngOnInit() {
     this.startGame();
   }
@@ -38,10 +38,9 @@ export class GameComponent implements OnInit {
     }
   }
 
-
+  
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
-    console.log('works');
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
