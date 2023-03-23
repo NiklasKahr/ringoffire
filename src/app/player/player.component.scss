@@ -3,14 +3,15 @@
     min-width: 200px;
     display: flex;
     align-items: center;
-    background-color: lightcoral;
+    background-color: rgb(173, 216, 230, 0.75);
     border-top-left-radius: 50px;
     border-bottom-left-radius: 50px;
 
     img {
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 72px;
         object-fit: cover;
+        opacity: 0.75;
         border-radius: 50%;
     }
 
@@ -18,4 +19,9 @@
         font-size: 22px;
         margin-left: 0.75rem;
     }
+}
+
+.player-active {
+    opacity: unset !important;
+    background-color: lightcoral;
 }

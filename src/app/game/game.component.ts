@@ -29,8 +29,9 @@ export class GameComponent implements OnInit {
   pickCard() {
     if (!this.hasPickCardAnimation) {
       this.currentCard = this.game.stack.pop()!; // ! is a non-null assertion operator
-      console.log(this.game);
       this.hasPickCardAnimation = true;
+      //currentPlayer takes turns (modulo)
+      this.game.currentPlayer = (++this.game.currentPlayer) % this.game.players.length;
       setTimeout(() => {
         this.game.placedCards.push(this.currentCard);
         this.hasPickCardAnimation = false;
@@ -38,11 +39,11 @@ export class GameComponent implements OnInit {
     }
   }
 
-  
+
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe(name => {
+      if (name && name.length > 0) { this.game.players.push(name); }
     });
   }
 

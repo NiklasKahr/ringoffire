@@ -65,3 +65,10 @@
         transform: scale(1.55) translateX(95%) translateY(-110%) rotate(-12deg);
     }
 }
+
+.pin-bottom {
+    position: absolute;
+    bottom: 3.5vh;
+    right: 8.5%;
+    max-width: calc(100% - 17%);
+}
