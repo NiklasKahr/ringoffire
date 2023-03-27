@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Game } from 'src/models/game';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -11,9 +13,15 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
 export class GameComponent implements OnInit {
   hasPickCardAnimation = false;
   currentCard: string = '';
-  game!: Game; // !:
-
-  constructor(public dialog: MatDialog) { }
+  game: Game;
+  private firestore: Firestore = inject(Firestore);
+  items$: Observable<any[]>;
+  
+  constructor(public dialog: MatDialog) {
+    const aCollection = collection(this.firestore, 'games')
+    this.items$ = collectionData(aCollection);
+    console.log(this.items$);
+  }
 
 
   ngOnInit() {
