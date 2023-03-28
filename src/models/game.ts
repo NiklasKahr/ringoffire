@@ -13,6 +13,16 @@ export class Game {
         }
         shuffle(this.stack);
     }
+
+
+    public toJson() {
+        return {
+            players: this.players,
+            stack: this.stack,
+            placedCards: this.placedCards,
+            currentPlayer: this.currentPlayer
+        }
+    }
 }
 
 

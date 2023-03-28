@@ -2,8 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Game } from 'src/models/game';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -11,34 +12,43 @@ import { Observable } from 'rxjs';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  hasPickCardAnimation = false;
-  currentCard: string = '';
   game: Game;
   private firestore: Firestore = inject(Firestore);
-  items$: Observable<any[]>;
-  
-  constructor(public dialog: MatDialog) {
-    const aCollection = collection(this.firestore, 'games')
-    this.items$ = collectionData(aCollection);
-    console.log(this.items$);
+  games$: Observable<any[]>;
+  currentCard: string = '';
+  hasPickCardAnimation = false;
+
+  constructor(private route: ActivatedRoute, private router: Router,
+    private dialog: MatDialog) {
   }
 
 
   ngOnInit() {
+    this.route.params.subscribe((params) => {
+      console.log(params['id']);
+      //this.router.navigateByUrl('/game/' + params['id']);
+    })
     this.startGame();
   }
 
 
-  startGame() {
+  async startGame() {
     this.game = new Game();
+    // const gameCollection = collection(this.firestore, 'games');
+    // await addDoc((gameCollection), { gameJson: this.game.toJson() });
+    const gameCollection = collection(this.firestore, 'games')
+    this.games$ = collectionData(gameCollection);
+    this.games$.subscribe((games) => {
+      console.log(games)
+    })
   }
 
 
   pickCard() {
     if (!this.hasPickCardAnimation) {
-      this.currentCard = this.game.stack.pop()!; // ! is a non-null assertion operator
+      this.currentCard = this.game.stack.pop()!;
       this.hasPickCardAnimation = true;
-      //currentPlayer takes turns (modulo)
+      //players take turns
       this.game.currentPlayer = (++this.game.currentPlayer) % this.game.players.length;
       setTimeout(() => {
         this.game.placedCards.push(this.currentCard);

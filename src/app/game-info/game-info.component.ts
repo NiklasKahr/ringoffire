@@ -18,7 +18,7 @@ export class GameInfoComponent implements OnChanges {
     { title: 'Thumbmaster', description: '' },
     { title: 'Men', description: 'All men drink.' },
     { title: 'Quizmaster', description: '' },
-    { title: 'Never have i ever...', description: 'Say something you never did. Everyone who did it has to drink.' },
+    { title: 'Never have I ever...', description: 'Say something you never did. Everyone who did it has to drink.' },
     { title: 'Rule', description: 'Make a rule. Everyone needs to drink when he breaks the rule.' },
   ];
 
