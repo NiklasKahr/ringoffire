@@ -25,11 +25,10 @@ export class GameComponent implements OnInit {
 
 
   ngOnInit() {
-    this.route.params.subscribe(async (params) => {
+    this.route.params.subscribe((params) => {
+      // console.log('ngOnInit(): ' + this.gameDb.id);
       console.log('ngOnInit(): ' + params['id']);
-      // this.games$.doc(params['id']);
-      this.router.navigateByUrl('/game/' + params['id']);
-      const docRef = doc(collection(this.firestore, 'games'), this.gameDb.id);
+      const docRef = doc(collection(this.firestore, 'games'), params['id']);
       docData(docRef).subscribe((doc) => {
         console.log('ngOnInit(): ' + doc);
       });
@@ -40,9 +39,7 @@ export class GameComponent implements OnInit {
 
   async startGame() {
     this.game = new Game();
-    const gameDb = collection(this.firestore, 'games');
-    await addDoc(gameDb, { gameJson: this.game.toJson() });
-    console.log('startGame(): ' + this.gameDb.id);
+    // await addDoc(this.gameDb, { gameJson: this.game.toJson() });
     this.games$ = collectionData(this.gameDb);
     this.games$.subscribe((games) => {
       console.log('startGame(): ' + games)
