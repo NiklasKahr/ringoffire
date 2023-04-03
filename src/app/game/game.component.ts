@@ -9,6 +9,7 @@ import { doc } from "firebase/firestore";
 //import update
 import { updateDoc } from "firebase/firestore";
 import { getDatabase, ref, child, push, update } from "firebase/database";
+import { Database } from '@angular/fire/database';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -81,6 +82,8 @@ export class GameComponent implements OnInit {
 
   saveGame() {
     const db = getDatabase();
+    // let ref = Database.database("https://db.europe-west1.firebasedatabase.app")
+
     update(ref(db), this.game.toJson());
     // this.ref('games').update(this.game.toJson(), 'games');
   }
