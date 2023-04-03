@@ -34,7 +34,6 @@ export class GameComponent implements OnInit {
       this.docRef = doc(collection(this.firestore, 'games'), params['id']);
       docData(this.docRef).subscribe((doc: any) => {
         console.log('doc: ' + doc);
-        debugger;
         console.log('doc[\'gameJson\']: ' + doc['gameJson']);
         const currentPlayer = doc['gameJson'].currentPlayer;
         const placedCards = doc['gameJson'].placedCards;
@@ -83,7 +82,7 @@ export class GameComponent implements OnInit {
   saveGame() {
     const db = getDatabase();
     // let ref = Database.database("https://db.europe-west1.firebasedatabase.app")
-
+    debugger;
     update(ref(db), this.game.toJson());
     // this.ref('games').update(this.game.toJson(), 'games');
   }
