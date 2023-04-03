@@ -81,9 +81,9 @@ export class GameComponent implements OnInit {
 
   saveGame() {
     const db = getDatabase();
-    // let ref = Database.database("https://db.europe-west1.firebasedatabase.app")
     debugger;
     console.log(db);
+    console.log(ref);
     console.log(this.game.toJson());
     update(ref(db), this.game.toJson());
     // this.ref('games').update(this.game.toJson(), 'games');
