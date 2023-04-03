@@ -16,7 +16,6 @@ export class GameComponent implements OnInit {
   game: Game;
   private firestore: Firestore = inject(Firestore);
   games$: Observable<any[]>;
-  gameDb = collection(this.firestore, 'games');
   currentCard: string = '';
   hasPickCardAnimation = false;
   constructor(private route: ActivatedRoute, private router: Router,
@@ -30,7 +29,7 @@ export class GameComponent implements OnInit {
       console.log('ngOnInit(): ' + params['id']);
       const docRef = doc(collection(this.firestore, 'games'), params['id']);
       docData(docRef).subscribe((doc) => {
-        console.log('ngOnInit(): ' + doc);
+        console.log('ngOnInit(): ' + doc['gameJson']);
       });
     })
     this.startGame();
@@ -40,7 +39,7 @@ export class GameComponent implements OnInit {
   async startGame() {
     this.game = new Game();
     // await addDoc(this.gameDb, { gameJson: this.game.toJson() });
-    this.games$ = collectionData(this.gameDb);
+    this.games$ = collectionData(collection(this.firestore, 'games'));
     this.games$.subscribe((games) => {
       console.log('startGame(): ' + games)
     })
