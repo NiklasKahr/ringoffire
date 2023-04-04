@@ -32,7 +32,7 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
-      console.log('ngOnInit(): ' + params['id']);
+      console.log('ID of Document: ' + params['id']);
       this.docRef = doc(collection(this.firestore, 'games'), params['id']);
       this.docID = params['id'];
       docData(this.docRef).subscribe((doc: any) => {
@@ -40,8 +40,8 @@ export class GameComponent implements OnInit {
         console.log('doc[\'gameJson\']: ' + doc['gameJson']);
         const currentPlayer = doc['gameJson'].currentPlayer;
         const placedCards = doc['gameJson'].placedCards;
-        console.log('currentPlayer: ' + currentPlayer);
-        console.log('placedCards: ' + placedCards);
+        // console.log('currentPlayer: ' + currentPlayer);
+        // console.log('placedCards: ' + placedCards);
         this.game.currentPlayer = doc['gameJson'].currentPlayer;
         this.game.placedCards = doc['gameJson'].playedCards ?? [];
         this.game.players = doc['gameJson'].players;
@@ -85,7 +85,7 @@ export class GameComponent implements OnInit {
   async saveGame() {
     // const db = getDatabase();
     // console.log(db);
-    console.log(ref);
+    // console.log(ref);
     console.log(this.game.toJson());
 
     await updateDoc(this.docRef, { gameJson: this.game.toJson() });
