@@ -7,6 +7,10 @@
     align-items: center;
     background-color: #404040;
 
+    @media (max-width: 960px) {
+        overflow: hidden;
+    }
+
     img {
         height: 100vh;
     }
@@ -24,6 +28,11 @@
         width: 40vw;
         height: auto;
         transition: 225ms;
+
+        @media (max-width: 960px) {
+            width: 400px;
+        }
+
         &:hover {
             filter: brightness(1.06);
             cursor: pointer;

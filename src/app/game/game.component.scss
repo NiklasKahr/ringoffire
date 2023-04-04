@@ -12,6 +12,7 @@
 .player-container {
     position: absolute;
     right: 0;
+    z-index: 1;
 }
 
 .card-stack {
@@ -69,6 +70,22 @@
 .pin-bottom {
     position: absolute;
     bottom: 3.5vh;
-    right: 8.5%;
-    max-width: calc(100% - 17%);
+    right: 200px;
+
+    @media (max-width: 720px) {
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.scroll-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left: 0.5rem;
 }

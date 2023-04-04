@@ -12,18 +12,16 @@ import { Game } from 'src/models/game';
 })
 export class StartScreenComponent {
   games$: any;
-  app = initializeApp(environment.firebase);
-  db = getFirestore(this.app);
-  gameDb = collection(this.db, 'games');
+  gameDb = collection(this.firestore, 'games');
   constructor(private firestore: Firestore, private router: Router) { }
 
 
-  async startGame() {
+  startGame() {
     let game = new Game();
-    await addDoc(this.gameDb, { gameJson: game.toJson() }).then((gameInfo) => {
+    addDoc(this.gameDb, game.toJson()).then((gameInfo) => {
       this.router.navigateByUrl('/game/' + gameInfo.id);
     });
-    this.games$ = collectionData(collection(this.firestore, 'games'));
-    this.games$.subscribe((games: any) => console.log('startGame(): ' + games))
+    // this.games$ = collectionData(collection(this.firestore, 'games'));
+    // this.games$.subscribe((games: any) => console.log('startGame(): ' + games))
   }
 }

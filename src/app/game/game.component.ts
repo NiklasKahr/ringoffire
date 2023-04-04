@@ -2,13 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Game } from 'src/models/game';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { Firestore, collection, docData, getFirestore } from '@angular/fire/firestore';
+import { Firestore, collection, doc, docData, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { doc, updateDoc } from "firebase/firestore";
-import { getDatabase, ref } from "firebase/database";
-import { initializeApp } from '@angular/fire/app';
-import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -17,13 +13,9 @@ import { environment } from 'src/environments/environment';
 export class GameComponent implements OnInit {
   game: Game;
   private firestore: Firestore = inject(Firestore);
-  app = initializeApp(environment.firebase);
-  db = getFirestore(this.app);
   games$: Observable<any[]>;
-  currentCard: string = '';
-  hasPickCardAnimation = false;
   docRef: any;
-  docID: any;
+  docId: any;
 
   constructor(private route: ActivatedRoute, private router: Router,
     private dialog: MatDialog) {
@@ -32,40 +24,39 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
-      console.log('ID of Document: ' + params['id']);
-      this.docRef = doc(collection(this.firestore, 'games'), params['id']);
-      this.docID = params['id'];
-      docData(this.docRef).subscribe((doc: any) => {
-        console.log('doc: ' + doc);
-        console.log('doc[\'gameJson\']: ' + doc['gameJson']);
-        // const currentPlayer = doc['gameJson'].currentPlayer;
-        // const placedCards = doc['gameJson'].placedCards;
-        // console.log('currentPlayer: ' + currentPlayer);
-        // console.log('placedCards: ' + placedCards);
-        this.game.currentPlayer = doc['gameJson'].currentPlayer;
-        this.game.placedCards = doc['gameJson'].playedCards ?? [];
-        this.game.players = doc['gameJson'].players;
-        this.game.stack = doc['gameJson'].stack;
+      this.startGame();
+      this.docId = params['id'];
+      this.docRef = doc(collection(this.firestore, 'games'), this.docId);
+      docData(this.docRef, { idField: 'id' }).subscribe((doc: any) => {
+        this.game.currentPlayer = doc.currentPlayer;
+        this.game.placedCards = doc.placedCards ?? [];
+        this.game.players = doc.players;
+        this.game.stack = doc.stack;
+        this.game.currentCard = doc.currentCard;
+        this.game.hasPickCardAnimation = doc.hasPickCardAnimation;
       });
     })
-    this.startGame();
   }
 
 
-  async startGame() {
+  startGame() {
     this.game = new Game();
   }
 
 
   pickCard() {
-    if (!this.hasPickCardAnimation) {
-      this.currentCard = this.game.stack.pop()!;
-      this.hasPickCardAnimation = true;
+    if (!this.game.hasPickCardAnimation) {
+      this.game.currentCard = this.game.stack.pop()!;
+      this.game.hasPickCardAnimation = true;
+      console.log('currentCard: ' + this.game.currentCard);
+      console.log('game.placedCards: ' + this.game.placedCards);
       //players take turns
       this.game.currentPlayer = (++this.game.currentPlayer) % this.game.players.length;
+      this.saveGame();
       setTimeout(() => {
-        this.game.placedCards.push(this.currentCard);
-        this.hasPickCardAnimation = false;
+        this.game.placedCards.push(this.game.currentCard);
+        this.game.hasPickCardAnimation = false;
+        this.saveGame();
       }, 1250);
     }
   }
@@ -83,13 +74,7 @@ export class GameComponent implements OnInit {
 
 
   async saveGame() {
-    // const db = getDatabase();
-
     console.log(this.game.toJson());
-    await updateDoc(this.docRef, { gameJson: this.game.toJson() });
-    
-    // --> this.docRef = doc(collection(this.firestore, 'games'), params['id'])
-    // however, according to Firebase Docs:
-    // docRef = doc(db, 'games', this.docID) - throws error (docID = params['id'])
+    await updateDoc(this.docRef, this.game.toJson());
   }
 }

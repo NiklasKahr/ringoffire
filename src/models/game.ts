@@ -3,7 +3,8 @@ export class Game {
     public stack: string[] = [];
     public placedCards: string[] = [];
     public currentPlayer: number = 0;
-
+    public currentCard: string = '';
+    public hasPickCardAnimation = false;
     constructor() {
         for (let i = 1; i < 14; i++) {
             this.stack.push(`spade_${i}`);
@@ -20,7 +21,9 @@ export class Game {
             players: this.players,
             stack: this.stack,
             placedCards: this.placedCards,
-            currentPlayer: this.currentPlayer
+            currentPlayer: this.currentPlayer,
+            currentCard: this.currentCard,
+            hasPickCardAnimation: this.hasPickCardAnimation
         }
     }
 }
