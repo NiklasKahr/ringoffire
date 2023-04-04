@@ -15,7 +15,6 @@ export class StartScreenComponent {
   app = initializeApp(environment.firebase);
   db = getFirestore(this.app);
   gameDb = collection(this.db, 'games');
-
   constructor(private firestore: Firestore, private router: Router) { }
 
 

@@ -2,14 +2,13 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Game } from 'src/models/game';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { Firestore, collection, docData } from '@angular/fire/firestore';
+import { Firestore, collection, docData, getFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { doc } from "firebase/firestore";
-//import update
-import { updateDoc } from "firebase/firestore";
-import { getDatabase, ref, child, push, update } from "firebase/database";
-import { Database } from '@angular/fire/database';
+import { doc, updateDoc } from "firebase/firestore";
+import { getDatabase, ref } from "firebase/database";
+import { initializeApp } from '@angular/fire/app';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -18,10 +17,13 @@ import { Database } from '@angular/fire/database';
 export class GameComponent implements OnInit {
   game: Game;
   private firestore: Firestore = inject(Firestore);
+  app = initializeApp(environment.firebase);
+  db = getFirestore(this.app);
   games$: Observable<any[]>;
   currentCard: string = '';
   hasPickCardAnimation = false;
   docRef: any;
+  docID: any;
 
   constructor(private route: ActivatedRoute, private router: Router,
     private dialog: MatDialog) {
@@ -32,6 +34,7 @@ export class GameComponent implements OnInit {
     this.route.params.subscribe((params) => {
       console.log('ngOnInit(): ' + params['id']);
       this.docRef = doc(collection(this.firestore, 'games'), params['id']);
+      this.docID = params['id'];
       docData(this.docRef).subscribe((doc: any) => {
         console.log('doc: ' + doc);
         console.log('doc[\'gameJson\']: ' + doc['gameJson']);
@@ -79,13 +82,15 @@ export class GameComponent implements OnInit {
   }
 
 
-  saveGame() {
+  async saveGame() {
     const db = getDatabase();
-    debugger;
     console.log(db);
     console.log(ref);
     console.log(this.game.toJson());
-    update(ref(db), this.game.toJson());
-    // this.ref('games').update(this.game.toJson(), 'games');
+
+    await updateDoc(this.docRef, { gameJson: this.game.toJson() });
+    // --> this.docRef = doc(collection(this.firestore, 'games'), params['id'])
+    // however, according to Firebase Docs:
+    // docRef = doc(db, 'games', this.docID) - throws error (docID = params['id'])
   }
 }
