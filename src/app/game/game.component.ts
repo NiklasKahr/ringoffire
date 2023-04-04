@@ -84,10 +84,10 @@ export class GameComponent implements OnInit {
 
   async saveGame() {
     // const db = getDatabase();
-    // console.log(db);
-    // console.log(ref);
+
     console.log(this.game.toJson());
     await updateDoc(this.docRef, { gameJson: this.game.toJson() });
+    
     // --> this.docRef = doc(collection(this.firestore, 'games'), params['id'])
     // however, according to Firebase Docs:
     // docRef = doc(db, 'games', this.docID) - throws error (docID = params['id'])
