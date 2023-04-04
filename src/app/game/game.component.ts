@@ -38,8 +38,8 @@ export class GameComponent implements OnInit {
       docData(this.docRef).subscribe((doc: any) => {
         console.log('doc: ' + doc);
         console.log('doc[\'gameJson\']: ' + doc['gameJson']);
-        const currentPlayer = doc['gameJson'].currentPlayer;
-        const placedCards = doc['gameJson'].placedCards;
+        // const currentPlayer = doc['gameJson'].currentPlayer;
+        // const placedCards = doc['gameJson'].placedCards;
         // console.log('currentPlayer: ' + currentPlayer);
         // console.log('placedCards: ' + placedCards);
         this.game.currentPlayer = doc['gameJson'].currentPlayer;
@@ -87,7 +87,6 @@ export class GameComponent implements OnInit {
     // console.log(db);
     // console.log(ref);
     console.log(this.game.toJson());
-
     await updateDoc(this.docRef, { gameJson: this.game.toJson() });
     // --> this.docRef = doc(collection(this.firestore, 'games'), params['id'])
     // however, according to Firebase Docs:
