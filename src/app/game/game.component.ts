@@ -83,8 +83,8 @@ export class GameComponent implements OnInit {
 
 
   async saveGame() {
-    const db = getDatabase();
-    console.log(db);
+    // const db = getDatabase();
+    // console.log(db);
     console.log(ref);
     console.log(this.game.toJson());
 
