@@ -1,3 +1,13 @@
+app-player,
+app-player-mobile {
+    cursor: pointer;
+    transition: 150ms ease-in-out;
+
+    &:hover {
+        filter: brightness(1.06);
+    }
+}
+
 .field {
     width: 100vw;
     height: 100vh;
@@ -88,4 +98,22 @@
     overflow-x: auto;
     overflow-y: hidden;
     margin-left: 0.5rem;
+}
+
+.game-over-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        height: 100px;
+    }
+}
+
+.preload-image {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    z-index: -999;
 }

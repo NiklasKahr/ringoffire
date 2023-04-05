@@ -5,6 +5,7 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
 import { Firestore, collection, doc, docData, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -16,6 +17,7 @@ export class GameComponent implements OnInit {
   games$: Observable<any[]>;
   docRef: any;
   docId: any;
+  isGameOver = false;
 
   constructor(private route: ActivatedRoute, private router: Router,
     private dialog: MatDialog) {
@@ -31,6 +33,7 @@ export class GameComponent implements OnInit {
         this.game.currentPlayer = doc.currentPlayer;
         this.game.placedCards = doc.placedCards ?? [];
         this.game.players = doc.players;
+        this.game.images = doc.images;
         this.game.stack = doc.stack;
         this.game.currentCard = doc.currentCard;
         this.game.hasPickCardAnimation = doc.hasPickCardAnimation;
@@ -45,7 +48,9 @@ export class GameComponent implements OnInit {
 
 
   pickCard() {
-    if (!this.game.hasPickCardAnimation) {
+    if (this.game.stack.length == 0) {
+      this.isGameOver = true;
+    } else if (!this.game.hasPickCardAnimation) {
       this.game.currentCard = this.game.stack.pop()!;
       this.game.hasPickCardAnimation = true;
       console.log('currentCard: ' + this.game.currentCard);
@@ -67,6 +72,24 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe(name => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.images.push('1.webp');
+        this.saveGame();
+      }
+    });
+  }
+
+
+  editPlayer(i: number) {
+    console.log(i);
+    const dialogRef = this.dialog.open(EditPlayerComponent);
+    dialogRef.afterClosed().subscribe(change => {
+      if (change) {
+        if (change == 'DELETE') {
+          this.game.players.splice(i, 1);
+          this.game.images.splice(i, 1);
+        } else {
+          this.game.images[i] = change;
+        }
         this.saveGame();
       }
     });
